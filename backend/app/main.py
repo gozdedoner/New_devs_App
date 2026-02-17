@@ -87,6 +87,20 @@ async def cache_invalidation_listener():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+  
+    logger.info("Starting up...")
+
+    # 🔥 ADD THIS
+    from app.core.database_pool import db_pool
+    await db_pool.initialize()
+    logger.info("✅ Revenue database pool initialized")
+
+    yield
+
+    logger.info("Shutting down...")
+
+    # 🔥 ADD THIS
+    await db_pool.close()
     # Startup
     logger.info("Starting up...")
 
